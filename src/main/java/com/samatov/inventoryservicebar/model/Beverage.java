@@ -24,6 +24,4 @@ public abstract class Beverage {
    //Градус алкоголя
    private Double acoholContent;
 
-
-
 }
