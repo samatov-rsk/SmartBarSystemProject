@@ -12,24 +12,24 @@ public class JuiceService {
     @Autowired
     private JuiceRepository juiceRepository;
 
-    // Метод для получение все пиво
-    public List<Juice> getAllBeers() {
+    // Метод для получение всех лимонадов
+    public List<Juice> getAllJuices() {
         return juiceRepository.findAll();
     }
-    // Метод для сохрание пиво
-    public void saveBeer(Juice juice) {
+    // Метод для сохрание лимонадов
+    public void saveJuice(Juice juice) {
         juiceRepository.save(juice);
     }
-    // Метод для удаление все пиво по айдишнику
-    public void deleteBeerAllById() {
+    // Метод для удаление всех соков по айдишнику
+    public void deleteJuicesAllById() {
         juiceRepository.deleteAll();
     }
-    // Метод для измененение пиво
-    public void updateBeer(Juice juice) {
+    // Метод для измененение лимонадов
+    public void updateJuice(Juice juice) {
         juiceRepository.save(juice);
     }
-    // Метод для нахождение пиво по айдишнику // Почему сделал конверт ? Не удобно будет писать строки для id
-    public void findBeerById(String id) {
+    // Метод для нахождение лимонадов по айдишнику
+    public void findJuiceById(String id) {
         juiceRepository.findById(id);
     }
 }

@@ -12,24 +12,24 @@ public class RumService {
     @Autowired
     private RumRepository rumRepository;
 
-    // Метод для получение все пиво
-    public List<Rum> getAllBeers() {
+    // Метод для получение всех ромов
+    public List<Rum> getAllRums() {
         return rumRepository.findAll();
     }
-    // Метод для сохрание пиво
-    public void saveBeer(Rum rum) {
+    // Метод для сохрание ромов
+    public void saveRum(Rum rum) {
         rumRepository.save(rum);
     }
-    // Метод для удаление все пиво по айдишнику
-    public void deleteBeerAllById() {
+    // Метод для удаление всех ромов по айдишнику
+    public void deleteRumsAllById() {
         rumRepository.deleteAll();
     }
-    // Метод для измененение пиво
-    public void updateBeer(Rum rum) {
+    // Метод для измененение ромов
+    public void updateRum(Rum rum) {
         rumRepository.save(rum);
     }
-    // Метод для нахождение пиво по айдишнику
-    public void findBeerById(String id) {
+    // Метод для нахождение рома по айдишнику
+    public void findRumById(String id) {
         rumRepository.findById(id);
     }
 }

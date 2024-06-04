@@ -12,24 +12,24 @@ public class WineService {
     @Autowired
     private WineRepository wineRepository;
 
-    // Метод для получение все пиво
-    public List<Wine> getAllBeers() {
+    // Метод для получение все вино
+    public List<Wine> getAllWines() {
         return wineRepository.findAll();
     }
-    // Метод для сохрание пиво
-    public void saveBeer(Wine wine) {
+    // Метод для сохрание вина
+    public void saveWine(Wine wine) {
         wineRepository.save(wine);
     }
-    // Метод для удаление все пиво по айдишнику
-    public void deleteBeerAllById() {
+    // Метод для удаление все вина по айдишнику
+    public void deleteWinesAllById() {
         wineRepository.deleteAll();
     }
-    // Метод для измененение пиво
-    public void updateBeer(Wine wine) {
+    // Метод для измененение вина
+    public void updateWine(Wine wine) {
         wineRepository.save(wine);
     }
-    // Метод для нахождение пиво по айдишнику
-    public void findBeerById(String id) {
+    // Метод для нахождение вина по айдишнику
+    public void findWineById(String id) {
         wineRepository.findById(id);
     }
 

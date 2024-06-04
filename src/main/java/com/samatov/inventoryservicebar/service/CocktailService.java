@@ -13,23 +13,23 @@ public class CocktailService {
     private CocktailRepository cocktailRepository;
 
     // Метод для получение всех коктейли
-    public List<Cocktail> getAllBeers() {
+    public List<Cocktail> getAllCocktails() {
         return cocktailRepository.findAll();
     }
     // Метод для сохрание коктейли
-    public void saveBeer(Cocktail cocktail) {
+    public void saveCocktail(Cocktail cocktail) {
         cocktailRepository.save(cocktail);
     }
     // Метод для удаление всех коктейли по айдишнику
-    public void deleteBeerAllById() {
+    public void deleteCocktailsAllById() {
         cocktailRepository.deleteAll();
     }
     // Метод для измененение состав т.д коктейли
-    public void updateBeer(Cocktail cocktail) {
+    public void updateCocktail(Cocktail cocktail) {
         cocktailRepository.save(cocktail);
     }
-    // Метод для нахождение пиво по айдишнику
-    public void findBeerById(String id) {
+    // Метод для нахождение коктейли по айдишнику
+    public void findCocktailById(String id) {
         cocktailRepository.findById(id);
     }
 }

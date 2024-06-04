@@ -12,24 +12,24 @@ public class LiqueurService {
     @Autowired
     private LiqueurRepository liqueurRepository;
 
-    // Метод для получение все пиво
-    public List<Liqueur> getAllBeers() {
+    // Метод для получение всех ликеров
+    public List<Liqueur> getAllLiqueurs() {
         return liqueurRepository.findAll();
     }
-    // Метод для сохрание пиво
-    public void saveBeer(Liqueur liqueur) {
+    // Метод для сохрание ликеров
+    public void saveLiqueur(Liqueur liqueur) {
         liqueurRepository.save(liqueur);
     }
-    // Метод для удаление все пиво по айдишнику
-    public void deleteBeerAllById() {
+    // Метод для удаление всех ликеров по айдишнику
+    public void deleteLiqueursAllById() {
         liqueurRepository.deleteAll();
     }
-    // Метод для измененение пиво
-    public void updateBeer(Liqueur liqueur) {
+    // Метод для измененение ликеров
+    public void updateLiqueur(Liqueur liqueur) {
         liqueurRepository.save(liqueur);
     }
-    // Метод для нахождение пиво по айдишнику
-    public void findBeerById(String id) {
+    // Метод для нахождение ликеров по айдишнику
+    public void findLiqueurById(String id) {
         liqueurRepository.findById(id);
     }
 
