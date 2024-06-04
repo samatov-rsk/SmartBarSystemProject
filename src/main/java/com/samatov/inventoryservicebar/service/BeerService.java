@@ -35,6 +35,7 @@ public class BeerService  {
         beerRepository.save(beer);
     }
     // Метод для удаление все пиво по айдишнику
+    //TODO Метод должен принимать Айди Модели который мы хотим удалить, вызвать метод deleteById 
     public void deleteBeerAllById() {
         beerRepository.deleteAll();
     }
