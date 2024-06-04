@@ -27,7 +27,7 @@ public class WineService {
     public void deleteAllBeers() {
         wineRepository.deleteAll();
     }
-    // Метод для измененение вина
+
     public void updateWine(Wine wine) {
         wineRepository.save(wine);
     }
