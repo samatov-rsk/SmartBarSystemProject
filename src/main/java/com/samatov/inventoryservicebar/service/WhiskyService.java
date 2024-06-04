@@ -12,25 +12,27 @@ public class WhiskyService {
     @Autowired
     private WhiskyRepository whiskyRepository;
 
-    // Метод для получение всех виски
     public List<Whisky> getAllWhiskys() {
         return whiskyRepository.findAll();
     }
-    // Метод для сохрание виски
+
     public void saveWhisky(Whisky whisky) {
         whiskyRepository.save(whisky);
     }
-    // Метод для удаление все виски по айдишнику
-    public void deleteWhiskysAllById() {
+
+    public void deleteBeerById(String id) {
+        whiskyRepository.deleteById(id);
+    }
+
+    public void deleteAllBeers() {
         whiskyRepository.deleteAll();
     }
-    // Метод для измененение виски
+
     public void updateWhisky(Whisky whisky) {
         whiskyRepository.save(whisky);
     }
-    // Метод для нахождение виски по айдишнику
+
     public void findWhiskyById(String id) {
         whiskyRepository.findById(id);
     }
-
 }

@@ -12,25 +12,27 @@ public class LiqueurService {
     @Autowired
     private LiqueurRepository liqueurRepository;
 
-    // Метод для получение всех ликеров
     public List<Liqueur> getAllLiqueurs() {
         return liqueurRepository.findAll();
     }
-    // Метод для сохрание ликеров
+
     public void saveLiqueur(Liqueur liqueur) {
         liqueurRepository.save(liqueur);
     }
-    // Метод для удаление всех ликеров по айдишнику
-    public void deleteLiqueursAllById() {
+
+    public void deleteBeerById(String id) {
+        liqueurRepository.deleteById(id);
+    }
+
+    public void deleteAllBeers() {
         liqueurRepository.deleteAll();
     }
-    // Метод для измененение ликеров
+
     public void updateLiqueur(Liqueur liqueur) {
         liqueurRepository.save(liqueur);
     }
-    // Метод для нахождение ликеров по айдишнику
+
     public void findLiqueurById(String id) {
         liqueurRepository.findById(id);
     }
-
 }

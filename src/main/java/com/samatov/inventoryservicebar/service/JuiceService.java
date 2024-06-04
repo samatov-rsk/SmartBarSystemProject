@@ -12,23 +12,26 @@ public class JuiceService {
     @Autowired
     private JuiceRepository juiceRepository;
 
-    // Метод для получение всех лимонадов
     public List<Juice> getAllJuices() {
         return juiceRepository.findAll();
     }
-    // Метод для сохрание лимонадов
+
     public void saveJuice(Juice juice) {
         juiceRepository.save(juice);
     }
-    // Метод для удаление всех соков по айдишнику
-    public void deleteJuicesAllById() {
+
+    public void deleteBeerById(String id) {
+        juiceRepository.deleteById(id);
+    }
+
+    public void deleteAllBeers() {
         juiceRepository.deleteAll();
     }
-    // Метод для измененение лимонадов
+
     public void updateJuice(Juice juice) {
         juiceRepository.save(juice);
     }
-    // Метод для нахождение лимонадов по айдишнику
+
     public void findJuiceById(String id) {
         juiceRepository.findById(id);
     }
