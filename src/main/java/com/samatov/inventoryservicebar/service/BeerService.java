@@ -3,9 +3,6 @@
  * это значит что Spring будет создавать экземпляр этого класса и по мере необходимости уничтожать
  * а также предоставлять зависимости которые требуются этому классу через механизм DI
  *
- * Аннотация @Repository говорит о том что может взаимодействовать с БД, вэб-серверами, и другими ресурсами
- * основная задача обеспечить доступ к данным и их обработку с требованиями бизнес-логики приложения
- *
  * Аннотация @Autowired говорит о том что Spring автоматический будет инжектить
  * это значит что Spring будет автоматический предоставлять экземпляры необходимых класснов или же интерфейсов
  * которые требуются для работы данного компонента
@@ -13,37 +10,41 @@
  * Аннотация @Override говорит о том что методы буду переопределены это значит что будет другая реализация методов
  * */
 
-package service;
+package com.samatov.inventoryservicebar.service;
+import com.samatov.inventoryservicebar.model.Beer;
+import com.samatov.inventoryservicebar.repository.BeerRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
-import com.samatov.inventoryservicebar.model.Beverage;
-import repository.ModelRepository;
+
+import java.util.List;
+
 
 @Service
-@Repository
-public class BeerServiceImpl implements ModelService {
+public class BeerService  {
+
     @Autowired
-    private ModelRepository.BeerRepository beerRepository;
+    private BeerRepository beerRepository;
 
-    @Override
-    public Beverage findById(Long id) {
-        return null;
+    // Метод для получение все пиво
+    public List<Beer> getAllBeers() {
+        return beerRepository.findAll();
+    }
+    // Метод для сохрание пиво
+    public void saveBeer(Beer beer) {
+        beerRepository.save(beer);
+    }
+    // Метод для удаление все пиво по айдишнику
+    public void deleteBeerAllById() {
+        beerRepository.deleteAll();
+    }
+    // Метод для измененение пиво
+    public void updateBeer(Beer beer) {
+        beerRepository.save(beer);
+    }
+    // Метод для нахождение пиво по айдишнику
+    public void findBeerById(String id) {
+        beerRepository.findById(id);
     }
 
-    @Override
-    public Beverage saveBeverage(Beverage beverage) {
-        return null;
-    }
-
-    @Override
-    public Beverage deleteById(Long id) {
-        return null;
-    }
-
-    @Override
-    public Beverage updateBeverage(Beverage beverage) {
-        return null;
-    }
 }
