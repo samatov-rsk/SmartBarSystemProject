@@ -32,7 +32,7 @@ public class BeerService {
 
     // Метод для получение всего пива
     public List<Beer> getAllBeers() {
-        logger.info("Вся позиция пива получили из база данных ");
+        logger.info("Всю позицию пива получили из база данных ");
         return beerRepository.findAll();
     }
 
@@ -44,7 +44,7 @@ public class BeerService {
 
     // Метод для удаления пива по айдишнику
     public void deleteBeerById(String id) {
-        logger.info("Успешно удалилось из база данных ");
+        logger.info("Пива успешно удалилось из база данных ");
         beerRepository.deleteById(id);
     }
 
@@ -56,7 +56,7 @@ public class BeerService {
 
     // Метод для изменения пива по айдишнику
     public void updateBeer(Beer beer) {
-        logger.info("Пива поменялось в базе данных ");
+        logger.info("Пива обновилась в базе данных ");
         beerRepository.save(beer);
     }
 
