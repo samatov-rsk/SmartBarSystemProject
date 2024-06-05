@@ -18,47 +18,54 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.logging.Logger;
 
 
 @Service
 public class BeerService {
 
+    private Logger logger = Logger.getGlobal();
+
     @Autowired
     private BeerRepository beerRepository;
-    
-    //TODO Пиши правильно комментарии (Метод для получениЯ всего пивА) - исправить 
-    // Метод для получение все пиво
+
+    // Метод для получение всего пива
     public List<Beer> getAllBeers() {
+        logger.info("Вся позиция пива получили из база данных ");
         return beerRepository.findAll();
     }
-    
-    //TODO Пиши правильно комментарии (Метод для сохранениЯ пивА) - исправить 
-    // Метод для сохрание пиво 
+
+    // Метод для сохрания пива
     public void saveBeer(Beer beer) {
+        logger.info("Пива добавлено в базу данных ");
         beerRepository.save(beer);
     }
 
-    //TODO Пиши правильно комментарии (Метод для удалениЯ пивА по айдишнику) - исправить 
-    // Метод для удаление пива по айдишнику
+    // Метод для удаления пива по айдишнику
     public void deleteBeerById(String id) {
+        logger.info("Успешно удалилось из база данных ");
         beerRepository.deleteById(id);
     }
 
-    //TODO Пиши правильно комментарии (Метод для удалениЯ всего пива. Пиши или пиво или сущность) - исправить 
-    // Метод для удаление всех сущностей
+    // Метод для удаления всего пива сущность
     public void deleteAllBeers() {
+        logger.info("Вся позиция пива удалилось из база данных ");
         beerRepository.deleteAll();
     }
-    
-    //TODO Пиши правильно комментарии (Метод для изменениЯ пивА по айдишнику) - исправить метод нет айдишника по которому мы меняем
-    // Метод для измененение пиво
+
+    // Метод для изменения пива по айдишнику
     public void updateBeer(Beer beer) {
+        logger.info("Пива поменялось в базе данных ");
         beerRepository.save(beer);
     }
-    //TODO Пиши правильно комментарии (Метод для нахождениЯ пивА по айдишнику) - исправить метод, метод должен возвращать сущность с БД
-    // Метод для нахождение пиво по айдишнику
-    public void findBeerById(String id) {
-        beerRepository.findById(id);
-    }
 
+    // Метод для нахождение пиво по айдишнику
+    public Optional<Beer> findBeerById(String id) {
+        try {
+            return beerRepository.findById(id);
+        } catch (Exception e) {
+            throw new RuntimeException("Ошибка. Не удалось найти пива по ID " + e);
+        }
+    }
 }

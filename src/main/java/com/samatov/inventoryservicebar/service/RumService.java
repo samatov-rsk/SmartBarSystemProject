@@ -1,10 +1,12 @@
 package com.samatov.inventoryservicebar.service;
+import com.samatov.inventoryservicebar.model.Cocktail;
 import com.samatov.inventoryservicebar.model.Rum;
 import com.samatov.inventoryservicebar.repository.RumRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RumService {
@@ -32,7 +34,11 @@ public class RumService {
         rumRepository.save(rum);
     }
 
-    public void findRumById(String id) {
-        rumRepository.findById(id);
+    public Optional<Rum> findRumById(String id) {
+        try {
+            return rumRepository.findById(id);
+        } catch (Exception e) {
+            throw new RuntimeException("Ошибка. Не удалось найти ром по ID " + e);
+        }
     }
 }

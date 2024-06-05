@@ -1,10 +1,12 @@
 package com.samatov.inventoryservicebar.service;
+import com.samatov.inventoryservicebar.model.Cocktail;
 import com.samatov.inventoryservicebar.model.Liqueur;
 import com.samatov.inventoryservicebar.repository.LiqueurRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class LiqueurService {
@@ -32,7 +34,11 @@ public class LiqueurService {
         liqueurRepository.save(liqueur);
     }
 
-    public void findLiqueurById(String id) {
-        liqueurRepository.findById(id);
+    public Optional<Liqueur> findLiqueurById(String id) {
+        try {
+            return liqueurRepository.findById(id);
+        } catch (Exception e) {
+            throw new RuntimeException("Ошибка. Не удалось найти ликер по ID " + e);
+        }
     }
 }
