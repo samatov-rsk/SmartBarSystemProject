@@ -55,9 +55,19 @@ public class BeerService {
     }
 
     // Метод для изменения пива по айдишнику
-    public void updateBeer(Beer beer) {
-        logger.info("Пива обновилась в базе данных ");
-        beerRepository.save(beer);
+    public void updateBeer(String id, Beer beer) {
+        Optional<Beer> existingBeer = beerRepository.findById(id);
+        if (existingBeer.isPresent()) {
+            Beer updatedBeer = existingBeer.get();
+            updatedBeer.setName(beer.getName());
+            updatedBeer.setCountryOfOrigin(beer.getCountryOfOrigin());
+            updatedBeer.setColor(beer.getColor());
+            updatedBeer.setPrice(beer.getPrice());
+            updatedBeer.setVolume(beer.getVolume());
+            updatedBeer.setAcoholContent(beer.getAcoholContent());
+            updatedBeer.setFiltered(beer.isFiltered());
+            beerRepository.save(updatedBeer);
+        }
     }
 
     // Метод для нахождение пиво по айдишнику
