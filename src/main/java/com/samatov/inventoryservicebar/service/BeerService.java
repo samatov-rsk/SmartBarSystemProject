@@ -32,25 +32,25 @@ public class BeerService {
 
     // Метод для получение всего пива
     public List<Beer> getAllBeers() {
-        logger.info("Всю позицию пива получили из база данных ");
+        logger.info("Всю позицию пива получили из база данных");
         return beerRepository.findAll();
     }
 
     // Метод для сохрания пива
     public void saveBeer(Beer beer) {
-        logger.info("Пива добавлено в базу данных ");
+        logger.info("Пива добавлено в базу данных");
         beerRepository.save(beer);
     }
 
     // Метод для удаления пива по айдишнику
     public void deleteBeerById(String id) {
-        logger.info("Пива успешно удалилось из база данных ");
+        logger.info("Пива удален из база данных");
         beerRepository.deleteById(id);
     }
 
     // Метод для удаления всего пива сущность
     public void deleteAllBeers() {
-        logger.info("Вся позиция пива удалилось из база данных ");
+        logger.info("Вся позиция пива удалена из база данных");
         beerRepository.deleteAll();
     }
 
@@ -66,6 +66,7 @@ public class BeerService {
             updatedBeer.setVolume(beer.getVolume());
             updatedBeer.setAcoholContent(beer.getAcoholContent());
             updatedBeer.setFiltered(beer.isFiltered());
+            logger.info("Пиво изменилось в базе данных");
             beerRepository.save(updatedBeer);
         }
     }
@@ -75,7 +76,7 @@ public class BeerService {
         try {
             return beerRepository.findById(id);
         } catch (Exception e) {
-            throw new RuntimeException("Ошибка. Не удалось найти пива по ID " + e);
+            throw new RuntimeException("Ошибка. Не удалось найти пива по ID" + e);
         }
     }
 }
