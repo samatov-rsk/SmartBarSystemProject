@@ -47,6 +47,7 @@ public class WineService {
             updatedWine.setPrice(wine.getPrice());
             updatedWine.setVolume(wine.getVolume());
             updatedWine.setAcoholContent(wine.getAcoholContent());
+            updatedWine.setGrapeVariety(wine.getGrapeVariety());
             logger.info("Вино изменилось в базе данных");
             wineRepository.save(updatedWine);
         }

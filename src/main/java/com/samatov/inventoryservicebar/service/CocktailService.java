@@ -41,7 +41,6 @@ public class CocktailService {
         if (existingCocktail.isPresent()) {
             Cocktail updatedCocktail = existingCocktail.get();
             updatedCocktail.setName(cocktail.getName());
-            updatedCocktail.setCountryOfOrigin(cocktail.getCountryOfOrigin());
             updatedCocktail.setColor(cocktail.getColor());
             updatedCocktail.setPrice(cocktail.getPrice());
             updatedCocktail.setVolume(cocktail.getVolume());
