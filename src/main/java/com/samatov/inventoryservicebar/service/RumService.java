@@ -48,7 +48,6 @@ public class RumService {
             updatedRum.setAcoholContent(rum.getAcoholContent());
             logger.info("Ром изменился в базе данных");
             rumRepository.save(updatedRum);
-            rumRepository.save(rum);
         }
     }
 

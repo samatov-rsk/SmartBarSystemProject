@@ -49,7 +49,6 @@ public class VodkaService  {
             updatedVodka.setAcoholContent(vodka.getAcoholContent());
             logger.info("Водка изменилась в базе данных");
             vodkaRepository.save(updatedVodka);
-            vodkaRepository.save(vodka);
         }
     }
 
