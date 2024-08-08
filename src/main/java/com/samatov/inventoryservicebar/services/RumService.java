@@ -1,7 +1,10 @@
 package com.samatov.inventoryservicebar.services;
+
 import com.samatov.inventoryservicebar.entities.Rum;
 import com.samatov.inventoryservicebar.repositories.RumRepository;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -11,9 +14,10 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class RumService {
 
-    private final RumRepository rumRepository;
+    RumRepository rumRepository;
 
     public List<Rum> getAllRums() {
         log.info("Всю позицию рома получили из база данных");

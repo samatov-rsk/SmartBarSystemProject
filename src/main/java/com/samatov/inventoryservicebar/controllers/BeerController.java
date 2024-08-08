@@ -2,18 +2,28 @@ package com.samatov.inventoryservicebar.controllers;
 
 import com.samatov.inventoryservicebar.entities.Beer;
 import com.samatov.inventoryservicebar.services.BeerService;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 
 import java.util.List;
-import java.util.Optional;
+
 
 @RestController
 @RequestMapping("/api/v1/beer")
 @RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class BeerController {
 
     private final BeerService beerService;
@@ -24,7 +34,7 @@ public class BeerController {
         return new ResponseEntity<>(beers,HttpStatus.OK);
     }
 
-    // Добавил проверку дабы избежать ошибки "NoSuchElementException" мало ли объект будет пуст
+
     @GetMapping("/{id}")
     public ResponseEntity<Beer> getBeerById(@PathVariable String id){
         return beerService.findBeerById(id)

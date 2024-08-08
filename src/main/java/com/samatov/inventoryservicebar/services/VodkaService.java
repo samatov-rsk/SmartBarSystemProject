@@ -2,7 +2,9 @@ package com.samatov.inventoryservicebar.services;
 
 import com.samatov.inventoryservicebar.entities.Vodka;
 import com.samatov.inventoryservicebar.repositories.VodkaRepository;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -12,9 +14,10 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class VodkaService  {
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+public class VodkaService {
 
-    private final VodkaRepository vodkaRepository;
+    VodkaRepository vodkaRepository;
 
     public List<Vodka> getAllVodkas() {
         log.info("Всю позицию водки получили из база данных");

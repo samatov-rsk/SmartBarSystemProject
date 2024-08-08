@@ -14,7 +14,9 @@ package com.samatov.inventoryservicebar.services;
 
 import com.samatov.inventoryservicebar.entities.Beer;
 import com.samatov.inventoryservicebar.repositories.BeerRepository;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -26,9 +28,10 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class BeerService {
 
-    private final BeerRepository beerRepository;
+    BeerRepository beerRepository;
 
     // Метод для получение всего пива
     public List<Beer> getAllBeers() {
@@ -65,7 +68,7 @@ public class BeerService {
             updatedBeer.setPrice(beer.getPrice());
             updatedBeer.setVolume(beer.getVolume());
             updatedBeer.setAcoholContent(beer.getAcoholContent());
-            updatedBeer.setFiltered(beer.isFiltered());
+            updatedBeer.setIsFiltered(beer.getIsFiltered());
             log.info("Пиво изменилось в базе данных");
             beerRepository.save(updatedBeer);
         }
