@@ -26,7 +26,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class BeerController {
 
-    private final BeerService beerService;
+    BeerService beerService;
 
     @GetMapping("/all")
     public ResponseEntity<List<Beer>> getAllBeers(){

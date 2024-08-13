@@ -12,6 +12,7 @@
 
 package com.samatov.inventoryservicebar.services;
 
+
 import com.samatov.inventoryservicebar.entities.Beer;
 import com.samatov.inventoryservicebar.repositories.BeerRepository;
 import lombok.AccessLevel;
@@ -76,10 +77,6 @@ public class BeerService {
 
     // Метод для нахождение пиво по айдишнику
     public Optional<Beer> findBeerById(String id) {
-        try {
             return beerRepository.findById(id);
-        } catch (Exception e) {
-            throw new RuntimeException("Ошибка. Не удалось найти пива по ID" + e);
-        }
     }
 }

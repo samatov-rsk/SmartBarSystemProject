@@ -26,7 +26,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class RumController {
 
-    private final RumService rumService;
+     RumService rumService;
 
     @GetMapping("/all")
     public ResponseEntity<List<Rum>> getAllRums() {

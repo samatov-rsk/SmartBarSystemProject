@@ -25,41 +25,41 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class WhiskyController {
 
-    private final WhiskyService whiskyService;
+    WhiskyService whiskyService;
 
     @GetMapping("/all")
-    public ResponseEntity<List<Whisky>> getAllWhiskys(){
+    public ResponseEntity<List<Whisky>> getAllWhiskys() {
         List<Whisky> whiskies = whiskyService.getAllWhiskys();
         return new ResponseEntity<>(whiskies, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Whisky> getWhiskyById(@PathVariable String id){
+    public ResponseEntity<Whisky> getWhiskyById(@PathVariable String id) {
         return whiskyService.findWhiskyById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Void> saveWhisky(@RequestBody Whisky whisky){
+    public ResponseEntity<Void> saveWhisky(@RequestBody Whisky whisky) {
         whiskyService.saveWhisky(whisky);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Whisky> updateWhiskyById(@PathVariable String id, Whisky whisky){
-        whiskyService.updateWhisky(id,whisky);
+    public ResponseEntity<Whisky> updateWhiskyById(@PathVariable String id, Whisky whisky) {
+        whiskyService.updateWhisky(id, whisky);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteWhiskyById(@PathVariable String id){
+    public ResponseEntity<Void> deleteWhiskyById(@PathVariable String id) {
         whiskyService.deleteWhiskyById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping("/delete/all")
-    public ResponseEntity<Whisky> deleteAllWhiskys(){
+    public ResponseEntity<Whisky> deleteAllWhiskys() {
         whiskyService.deleteAllWhiskys();
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
