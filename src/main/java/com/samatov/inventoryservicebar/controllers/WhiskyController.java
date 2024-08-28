@@ -1,8 +1,8 @@
 package com.samatov.inventoryservicebar.controllers;
 
-
-import com.samatov.inventoryservicebar.entities.Whisky;
+import com.samatov.inventoryservicebar.dto.WhiskyDTO;
 import com.samatov.inventoryservicebar.services.WhiskyService;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -28,27 +28,26 @@ public class WhiskyController {
     WhiskyService whiskyService;
 
     @GetMapping("/all")
-    public ResponseEntity<List<Whisky>> getAllWhiskys() {
-        List<Whisky> whiskies = whiskyService.getAllWhiskys();
-        return new ResponseEntity<>(whiskies, HttpStatus.OK);
+    public ResponseEntity<List<WhiskyDTO>> getAllWhiskys() {
+        List<WhiskyDTO> whiskiesDto = whiskyService.getAllWhiskys();
+        return new ResponseEntity<>(whiskiesDto, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Whisky> getWhiskyById(@PathVariable String id) {
-        return whiskyService.findWhiskyById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<WhiskyDTO> getWhiskyById(@PathVariable String id) {
+       WhiskyDTO whiskyDto = whiskyService.findWhiskyById(id);
+       return ResponseEntity.ok(whiskyDto);
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Void> saveWhisky(@RequestBody Whisky whisky) {
-        whiskyService.saveWhisky(whisky);
+    public ResponseEntity<Void> saveWhisky(@RequestBody @Valid WhiskyDTO whiskyDto) {
+        whiskyService.saveWhisky(whiskyDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Whisky> updateWhiskyById(@PathVariable String id, Whisky whisky) {
-        whiskyService.updateWhisky(id, whisky);
+    public ResponseEntity<WhiskyDTO> updateWhiskyById(@PathVariable String id, @Valid WhiskyDTO whiskyDto) {
+        whiskyService.updateWhisky(id, whiskyDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -59,7 +58,7 @@ public class WhiskyController {
     }
 
     @DeleteMapping("/delete/all")
-    public ResponseEntity<Whisky> deleteAllWhiskys() {
+    public ResponseEntity<WhiskyDTO> deleteAllWhiskys() {
         whiskyService.deleteAllWhiskys();
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

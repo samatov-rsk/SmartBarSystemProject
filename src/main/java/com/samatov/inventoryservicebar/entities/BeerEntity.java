@@ -8,13 +8,14 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Document(collection = "whines")
-public class Wine extends Beverage {
+@Document(collection = "beers")
+public class BeerEntity extends BeverageEntity {
 
-    String grapeVariety;
+     Boolean isFiltered;
+
 }

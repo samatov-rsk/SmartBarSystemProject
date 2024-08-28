@@ -1,7 +1,8 @@
 package com.samatov.inventoryservicebar.controllers;
 
-import com.samatov.inventoryservicebar.entities.Liqueur;
+import com.samatov.inventoryservicebar.dto.LiqueurDTO;
 import com.samatov.inventoryservicebar.services.LiqueurService;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
 import java.util.List;
 
 @RestController
@@ -28,38 +28,37 @@ public class LiqueurControllers {
     LiqueurService liqueurService;
 
     @GetMapping("/all")
-    public ResponseEntity<List<Liqueur>> getAllLiqueurs(){
-        List<Liqueur> liqueurs =  liqueurService.getAllLiqueurs();
-        return new ResponseEntity<>(liqueurs, HttpStatus.OK);
+    public ResponseEntity<List<LiqueurDTO>> getAllLiqueurs() {
+        List<LiqueurDTO> liqueursDto = liqueurService.getAllLiqueurs();
+        return new ResponseEntity<>(liqueursDto, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Liqueur> getLiqueursById(@PathVariable String id){
-        return liqueurService.findLiqueurById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<LiqueurDTO> getLiqueursById(@PathVariable String id) {
+        LiqueurDTO liqueurDto = liqueurService.findLiqueurById(id);
+        return ResponseEntity.ok(liqueurDto);
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Void> saveLiqueur(@RequestBody Liqueur liqueur){
-        liqueurService.saveLiqueur(liqueur);
+    public ResponseEntity<Void> saveLiqueur(@RequestBody @Valid LiqueurDTO liqueurDto) {
+        liqueurService.saveLiqueur(liqueurDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Liqueur> updateLiqueurById(@PathVariable String id, Liqueur liqueur){
-        liqueurService.updateLiqueur(id, liqueur);
+    public ResponseEntity<LiqueurDTO> updateLiqueurById(@PathVariable String id, @Valid LiqueurDTO liqueurDto) {
+        liqueurService.updateLiqueur(id, liqueurDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteLiqueurById(@PathVariable String id){
+    public ResponseEntity<Void> deleteLiqueurById(@PathVariable String id) {
         liqueurService.deleteLiqueurById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping("/delete/all")
-    public ResponseEntity<Liqueur> deleteAllLiqueurs(){
+    public ResponseEntity<LiqueurDTO> deleteAllLiqueurs() {
         liqueurService.deleteAllLiqueurs();
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

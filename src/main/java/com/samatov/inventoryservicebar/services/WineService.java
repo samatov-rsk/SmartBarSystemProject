@@ -1,6 +1,9 @@
 package com.samatov.inventoryservicebar.services;
 
-import com.samatov.inventoryservicebar.entities.Wine;
+import com.samatov.inventoryservicebar.common.exceptions.notfoundexceptions.WineNotFoundException;
+import com.samatov.inventoryservicebar.dto.WineDTO;
+import com.samatov.inventoryservicebar.entities.WineEntity;
+import com.samatov.inventoryservicebar.mappers.WineMapper;
 import com.samatov.inventoryservicebar.repositories.WineRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -20,47 +23,55 @@ public class WineService {
 
     WineRepository wineRepository;
 
-    public List<Wine> getAllWines() {
-        log.info("Всю позицию вина получили из база данных");
-        return wineRepository.findAll();
+    WineMapper wineMapper;
+
+    public List<WineDTO> getAllWines() {
+        List<WineEntity> wines = wineRepository.findAll();
+        log.info("Получены все позиции вина из базы данных");
+        if (wines.isEmpty()) {
+            throw new WineNotFoundException("Позиции вина не найдены в базе данныхвщсл");
+        }
+        return wines.stream().map(wineMapper::toDto).collect(Collectors.toList());
     }
 
-    public void saveWine(Wine wine) {
-        log.info("Вино добавлено в базу данных");
+    public void saveWine(WineDTO wineDTO) {
+        WineEntity wine = wineMapper.toEntity(wineDTO);
+        log.info("Добавление вина в базу данных");
         wineRepository.save(wine);
     }
 
     public void deleteWineById(String id) {
-        log.info("Вино удален из база данных");
+        log.info("Удаление вина из базы данных");
+        if (!wineRepository.existsById(id)) {
+            throw new WineNotFoundException("Вино с данным идендификатором не найдено");
+        }
         wineRepository.deleteById(id);
     }
 
     public void deleteAllWines() {
-        log.info("Вся позиция вина удалена из база данных");
+        log.info("Удаление всех позиций вина из базы данных");
         wineRepository.deleteAll();
     }
 
-    public void updateWine(String id, Wine wine) {
-        Optional<Wine> existingWine = wineRepository.findById(id);
+    public void updateWine(String id, WineDTO wineDTO) {
+        Optional<WineEntity> existingWine = wineRepository.findById(id);
         if (existingWine.isPresent()) {
-            Wine updatedWine = existingWine.get();
-            updatedWine.setName(wine.getName());
-            updatedWine.setCountryOfOrigin(wine.getCountryOfOrigin());
-            updatedWine.setColor(wine.getColor());
-            updatedWine.setPrice(wine.getPrice());
-            updatedWine.setVolume(wine.getVolume());
-            updatedWine.setAcoholContent(wine.getAcoholContent());
-            updatedWine.setGrapeVariety(wine.getGrapeVariety());
-            log.info("Вино изменилось в базе данных");
+            WineEntity updatedWine = wineMapper.toEntity(wineDTO);
+            updatedWine.setName(updatedWine.getName());
+            updatedWine.setColor(updatedWine.getColor());
+            updatedWine.setPrice(updatedWine.getPrice());
+            updatedWine.setVolume(updatedWine.getVolume());
+            updatedWine.setAlcoholContent(updatedWine.getAlcoholContent());
+            updatedWine.setGrapeVariety(updatedWine.getGrapeVariety());
+            log.info("Обновление вина в базе данных");
             wineRepository.save(updatedWine);
+        } else {
+            throw new WineNotFoundException("Вино с данным идендификатором не найдено");
         }
     }
-
-    public Optional<Wine> findWineById(String id) {
-        try {
-            return wineRepository.findById(id);
-        } catch (Exception e) {
-            throw new RuntimeException("Ошибка. Не удалось найти вино по ID " + e);
+        public WineDTO findWineById(String id) {
+            return wineRepository.findById(id)
+                    .map(wineMapper::toDto)
+                    .orElseThrow(() -> new WineNotFoundException("Вино с данным идендификатором не найдено"));
         }
-    }
 }

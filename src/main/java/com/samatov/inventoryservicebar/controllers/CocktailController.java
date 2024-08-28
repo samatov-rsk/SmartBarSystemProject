@@ -1,7 +1,8 @@
 package com.samatov.inventoryservicebar.controllers;
 
-import com.samatov.inventoryservicebar.entities.Cocktail;
+import com.samatov.inventoryservicebar.dto.CocktailDTO;
 import com.samatov.inventoryservicebar.services.CocktailService;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
 import java.util.List;
 
 @RestController
@@ -28,27 +28,26 @@ public class CocktailController {
         CocktailService cocktailService;
 
         @GetMapping("/all")
-        public ResponseEntity<List<Cocktail>> getAllCocktails() {
-            List<Cocktail> cocktails = cocktailService.getAllCocktails();
-            return new ResponseEntity<>(cocktails, HttpStatus.OK);
+        public ResponseEntity<List<CocktailDTO>> getAllCocktails() {
+            List<CocktailDTO> cocktailsDto = cocktailService.getAllCocktails();
+            return new ResponseEntity<>(cocktailsDto, HttpStatus.OK);
         }
 
         @GetMapping("/{id}")
-        public ResponseEntity<Cocktail> getCocktailById(@PathVariable String id) {
-            return cocktailService.findCocktailById(id)
-                    .map(ResponseEntity::ok)
-                    .orElse(ResponseEntity.notFound().build());
+        public ResponseEntity<CocktailDTO> getCocktailById(@PathVariable String id) {
+            CocktailDTO cocktailDto = cocktailService.findCocktailById(id);
+            return ResponseEntity.ok(cocktailDto);
         }
 
         @PostMapping("/add")
-        public ResponseEntity<Void> saveCocktail(@RequestBody Cocktail cocktail) {
-            cocktailService.saveCocktail(cocktail);
+        public ResponseEntity<Void> saveCocktail(@RequestBody  @Valid CocktailDTO cocktailDto) {
+            cocktailService.saveCocktail(cocktailDto);
             return new ResponseEntity<>(HttpStatus.CREATED);
         }
 
         @PutMapping("/{id}")
-        public ResponseEntity<Cocktail> updateCocktailById(@PathVariable String id, Cocktail cocktail) {
-            cocktailService.updateCocktail(id, cocktail);
+        public ResponseEntity<CocktailDTO> updateCocktailById(@PathVariable String id, @Valid CocktailDTO cocktailDto) {
+            cocktailService.updateCocktail(id, cocktailDto);
             return new ResponseEntity<>(HttpStatus.OK);
         }
 
@@ -59,7 +58,7 @@ public class CocktailController {
         }
 
         @DeleteMapping("/delete/all")
-        public ResponseEntity<Cocktail> deleteAllCocktail() {
+        public ResponseEntity<CocktailDTO> deleteAllCocktail() {
             cocktailService.deleteAllCocktails();
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }

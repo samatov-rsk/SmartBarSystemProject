@@ -1,7 +1,8 @@
 package com.samatov.inventoryservicebar.controllers;
 
-import com.samatov.inventoryservicebar.entities.Juice;
+import com.samatov.inventoryservicebar.dto.JuiceDTO;
 import com.samatov.inventoryservicebar.services.JuiceService;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
 import java.util.List;
 
 @RestController
@@ -28,27 +28,26 @@ public class JuiceController {
         JuiceService juiceService;
 
         @GetMapping("/all")
-        public ResponseEntity<List<Juice>> getAllJuices(){
-            List<Juice> juices =  juiceService.getAllJuices();
-            return new ResponseEntity<>(juices, HttpStatus.OK);
+        public ResponseEntity<List<JuiceDTO>> getAllJuices(){
+            List<JuiceDTO> juicesDto =  juiceService.getAllJuices();
+            return new ResponseEntity<>(juicesDto, HttpStatus.OK);
         }
 
         @GetMapping("/{id}")
-        public ResponseEntity<Juice> getJuiceById(@PathVariable String id){
-            return juiceService.findJuiceById(id)
-                    .map(ResponseEntity::ok)
-                    .orElse(ResponseEntity.notFound().build());
+        public ResponseEntity<JuiceDTO> getJuiceById(@PathVariable String id){
+            JuiceDTO juiceDto = juiceService.findJuiceById(id);
+            return ResponseEntity.ok(juiceDto);
         }
 
         @PostMapping("/add")
-        public ResponseEntity<Void> saveJuice(@RequestBody Juice juice){
-            juiceService.saveJuice(juice);
+        public ResponseEntity<Void> saveJuice(@RequestBody @Valid JuiceDTO juiceDto){
+            juiceService.saveJuice(juiceDto);
             return new ResponseEntity<>(HttpStatus.CREATED);
         }
 
         @PutMapping("/{id}")
-        public ResponseEntity<Juice> updateJuiceById(@PathVariable String id, Juice juice){
-            juiceService.updateJuice(id, juice);
+        public ResponseEntity<JuiceDTO> updateJuiceById(@PathVariable String id, @Valid JuiceDTO juiceDto){
+            juiceService.updateJuice(id, juiceDto);
             return new ResponseEntity<>(HttpStatus.OK);
         }
 
@@ -59,7 +58,7 @@ public class JuiceController {
         }
 
         @DeleteMapping("/delete/all")
-        public ResponseEntity<Juice> deleteAllJuice(){
+        public ResponseEntity<JuiceDTO> deleteAllJuice(){
             juiceService.deleteAllJuices();
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }

@@ -1,6 +1,5 @@
 package com.samatov.inventoryservicebar.common.handler;
 
-
 import com.samatov.inventoryservicebar.common.exceptions.notfoundexceptions.BeerNotFoundException;
 import com.samatov.inventoryservicebar.common.exceptions.notfoundexceptions.CocktailNotFoundException;
 import com.samatov.inventoryservicebar.common.exceptions.notfoundexceptions.JuiceNotFoundException;
@@ -26,16 +25,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
  * Глобальный обработчик исключений
  */
 
-
 @RestControllerAdvice
 public class GlobalRestExceptionHandler {
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleGenericException(Exception e) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("Внутренняя ошибка сервера: " + e.getMessage());
-    }
-
 
     @ExceptionHandler(BeerNotFoundException.class)
     public ResponseEntity<String> handleBeerNotFoundException(BeerNotFoundException e) {
@@ -131,5 +122,11 @@ public class GlobalRestExceptionHandler {
     public ResponseEntity<String> handleInvalidWineDataException(InvalidWineDataException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body("Некорретные данные для вина: " + e.getMessage());
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleGenericException(Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("Внутренняя ошибка сервера: " + e.getMessage());
     }
 }

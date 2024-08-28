@@ -1,6 +1,9 @@
 package com.samatov.inventoryservicebar.services;
 
-import com.samatov.inventoryservicebar.entities.Liqueur;
+import com.samatov.inventoryservicebar.common.exceptions.notfoundexceptions.LiqueurNotFoundException;
+import com.samatov.inventoryservicebar.dto.LiqueurDTO;
+import com.samatov.inventoryservicebar.entities.LiqueurEntity;
+import com.samatov.inventoryservicebar.mappers.LiqueurMapper;
 import com.samatov.inventoryservicebar.repositories.LiqueurRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -19,46 +23,55 @@ public class LiqueurService {
 
     LiqueurRepository liqueurRepository;
 
-    public List<Liqueur> getAllLiqueurs() {
-        log.info("Всю позицию ликеров получили из база данных");
-        return liqueurRepository.findAll();
+    LiqueurMapper liqueurMapper;
+
+    public List<LiqueurDTO> getAllLiqueurs() {
+        List<LiqueurEntity> liqueurs = liqueurRepository.findAll();
+        log.info("Получены все позиции ликеров из базы данных");
+        if (liqueurs.isEmpty()) {
+            throw new LiqueurNotFoundException("Позиции ликеров не найдены в базе данных");
+        }
+        return liqueurs.stream().map(liqueurMapper::toDto).collect(Collectors.toList());
     }
 
-    public void saveLiqueur(Liqueur liqueur) {
-        log.info("Ликер добавлен в базу данных");
+    public void saveLiqueur(LiqueurDTO liqueurDTO) {
+        LiqueurEntity liqueur = liqueurMapper.toEntity(liqueurDTO);
+        log.info("Добавление ликера в базу данных");
         liqueurRepository.save(liqueur);
     }
 
     public void deleteLiqueurById(String id) {
-        log.info("Ликер удален из база данных");
+        log.info("Удаление ликера из базы данных");
+        if (!liqueurRepository.existsById(id)) {
+            throw new LiqueurNotFoundException("Ликер с данным идендификатором не найден");
+        }
         liqueurRepository.deleteById(id);
     }
 
     public void deleteAllLiqueurs() {
-        log.info("Вся позиция ликеров удалена из база данных");
+        log.info("Удаление всех позиций ликера из базы данных");
         liqueurRepository.deleteAll();
     }
 
-    public void updateLiqueur(String id, Liqueur liqueur) {
-        Optional<Liqueur> existingLiqueur = liqueurRepository.findById(id);
+    public void updateLiqueur(String id, LiqueurDTO liqueurDTO) {
+        Optional<LiqueurEntity> existingLiqueur = liqueurRepository.findById(id);
         if (existingLiqueur.isPresent()) {
-            Liqueur updatedLiqueur = existingLiqueur.get();
-            updatedLiqueur.setName(liqueur.getName());
-            updatedLiqueur.setCountryOfOrigin(liqueur.getCountryOfOrigin());
-            updatedLiqueur.setColor(liqueur.getColor());
-            updatedLiqueur.setPrice(liqueur.getPrice());
-            updatedLiqueur.setVolume(liqueur.getVolume());
-            updatedLiqueur.setAcoholContent(liqueur.getAcoholContent());
-            log.info("Ликер изменился в базе данных");
+            LiqueurEntity updatedLiqueur = liqueurMapper.toEntity(liqueurDTO);
+            updatedLiqueur.setName(updatedLiqueur.getName());
+            updatedLiqueur.setColor(updatedLiqueur.getColor());
+            updatedLiqueur.setPrice(updatedLiqueur.getPrice());
+            updatedLiqueur.setVolume(updatedLiqueur.getVolume());
+            updatedLiqueur.setAlcoholContent(updatedLiqueur.getAlcoholContent());
+            log.info("Обновление ликера в базе данных");
             liqueurRepository.save(updatedLiqueur);
+        } else {
+            throw new LiqueurNotFoundException("Ликер с данным идендификатором не найден");
         }
     }
 
-    public Optional<Liqueur> findLiqueurById(String id) {
-        try {
-            return liqueurRepository.findById(id);
-        } catch (Exception e) {
-            throw new RuntimeException("Ошибка. Не удалось найти ликер по ID " + e);
-        }
+    public LiqueurDTO findLiqueurById(String id) {
+        return liqueurRepository.findById(id)
+                .map(liqueurMapper::toDto)
+                .orElseThrow(() -> new LiqueurNotFoundException("Ликер с данным идендификатором не найден"));
     }
 }

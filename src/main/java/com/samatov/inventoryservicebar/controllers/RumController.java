@@ -1,8 +1,8 @@
 package com.samatov.inventoryservicebar.controllers;
 
-
-import com.samatov.inventoryservicebar.entities.Rum;
+import com.samatov.inventoryservicebar.dto.RumDTO;
 import com.samatov.inventoryservicebar.services.RumService;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
 import java.util.List;
 
 @RestController
@@ -29,27 +28,26 @@ public class RumController {
      RumService rumService;
 
     @GetMapping("/all")
-    public ResponseEntity<List<Rum>> getAllRums() {
-        List<Rum> rums = rumService.getAllRums();
-        return new ResponseEntity<>(rums, HttpStatus.OK);
+    public ResponseEntity<List<RumDTO>> getAllRums() {
+        List<RumDTO> rumsDto = rumService.getAllRums();
+        return new ResponseEntity<>(rumsDto, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Rum> getRumById(@PathVariable String id){
-        return rumService.findRumById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<RumDTO> getRumById(@PathVariable String id){
+        RumDTO rumDto = rumService.findRumById(id);
+        return ResponseEntity.ok(rumDto);
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Void> saveRum(@RequestBody Rum rum){
-        rumService.saveRum(rum);
+    public ResponseEntity<Void> saveRum(@RequestBody @Valid RumDTO rumDto){
+        rumService.saveRum(rumDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Rum> updateRumById(@PathVariable String id, Rum rum){
-        rumService.updateRum(id, rum);
+    public ResponseEntity<RumDTO> updateRumById(@PathVariable String id, @Valid RumDTO rumDto){
+        rumService.updateRum(id, rumDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -60,7 +58,7 @@ public class RumController {
     }
 
     @DeleteMapping("/delete/all")
-    public ResponseEntity<Rum> deleteAllRums(){
+    public ResponseEntity<RumDTO> deleteAllRums(){
         rumService.deleteAllRums();
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

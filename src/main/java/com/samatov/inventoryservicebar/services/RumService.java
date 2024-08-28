@@ -1,6 +1,9 @@
 package com.samatov.inventoryservicebar.services;
 
-import com.samatov.inventoryservicebar.entities.Rum;
+import com.samatov.inventoryservicebar.common.exceptions.notfoundexceptions.RumNotFoundException;
+import com.samatov.inventoryservicebar.dto.RumDTO;
+import com.samatov.inventoryservicebar.entities.RumEntity;
+import com.samatov.inventoryservicebar.mappers.RumMapper;
 import com.samatov.inventoryservicebar.repositories.RumRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -19,46 +23,55 @@ public class RumService {
 
     RumRepository rumRepository;
 
-    public List<Rum> getAllRums() {
-        log.info("Всю позицию рома получили из база данных");
-        return rumRepository.findAll();
+    RumMapper rumMapper;
+
+    public List<RumDTO> getAllRums() {
+        List<RumEntity> rums = rumRepository.findAll();
+        log.info("Получены все позиции рома из базы данных");
+        if (rums.isEmpty()) {
+            throw new RumNotFoundException("Позиции рома не найдены в базе данных");
+        }
+        return rums.stream().map(rumMapper::toDto).collect(Collectors.toList());
     }
 
-    public void saveRum(Rum rum) {
-        log.info("Ром добавлен в базу данных");
+    public void saveRum(RumDTO rumDTO) {
+        RumEntity rum = rumMapper.toEntity(rumDTO);
+        log.info("Добавление рома в базу данных");
         rumRepository.save(rum);
     }
 
     public void deleteRumById(String id) {
-        log.info("Ром удален из база данных");
+        log.info("Удаление рома из базы данных");
+        if (!rumRepository.existsById(id)) {
+            throw new RumNotFoundException("Ром с данным идендификатором не найден");
+        }
         rumRepository.deleteById(id);
     }
 
     public void deleteAllRums() {
-        log.info("Вся позиция рома удалена из база данных");
+        log.info("Удаление всех позиций рома из базы данных");
         rumRepository.deleteAll();
     }
 
-    public void updateRum(String id, Rum rum) {
-        Optional<Rum> existingRum = rumRepository.findById(id);
+    public void updateRum(String id, RumDTO rumDTO) {
+        Optional<RumEntity> existingRum = rumRepository.findById(id);
         if (existingRum.isPresent()) {
-            Rum updatedRum = existingRum.get();
-            updatedRum.setName(rum.getName());
-            updatedRum.setCountryOfOrigin(rum.getCountryOfOrigin());
-            updatedRum.setColor(rum.getColor());
-            updatedRum.setPrice(rum.getPrice());
-            updatedRum.setVolume(rum.getVolume());
-            updatedRum.setAcoholContent(rum.getAcoholContent());
-            log.info("Ром изменился в базе данных");
+            RumEntity updatedRum = rumMapper.toEntity(rumDTO);
+            updatedRum.setName(updatedRum.getName());
+            updatedRum.setColor(updatedRum.getColor());
+            updatedRum.setPrice(updatedRum.getPrice());
+            updatedRum.setVolume(updatedRum.getVolume());
+            updatedRum.setAlcoholContent(updatedRum.getAlcoholContent());
+            log.info("Обновление рома в базе данных");
             rumRepository.save(updatedRum);
+        } else {
+            throw new RumNotFoundException("Ром с данным идендификатором не найден");
         }
     }
 
-    public Optional<Rum> findRumById(String id) {
-        try {
-            return rumRepository.findById(id);
-        } catch (Exception e) {
-            throw new RuntimeException("Ошибка. Не удалось найти ром по ID " + e);
-        }
+    public RumDTO findRumById(String id) {
+        return rumRepository.findById(id)
+                .map(rumMapper::toDto)
+                .orElseThrow(() -> new RumNotFoundException("Ром с данным идендификатором не найден"));
     }
 }

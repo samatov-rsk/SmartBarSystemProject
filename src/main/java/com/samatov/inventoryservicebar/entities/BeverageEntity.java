@@ -7,16 +7,16 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
+/**
+ * Название класса общего для других класс называется Напитки
+ * */
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-/**
- * Название класса общего для других класс называется Напитки
- * */
-public abstract class Beverage {
+public abstract class BeverageEntity {
     // Название
     String name;
     //Страна производства
@@ -28,6 +28,5 @@ public abstract class Beverage {
     //Объем в миллиметрах
     Integer volume;
     //Градус алкоголя
-    Double acoholContent;
-
+    Double alcoholContent;
 }

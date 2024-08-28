@@ -10,14 +10,13 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Map;
 
-
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Document(collection = "cocktails")
-public class Cocktail extends Beverage {
+public class CocktailEntity extends BeverageEntity {
 
      Map<String, Integer> ingredients;
 }

@@ -1,6 +1,9 @@
 package com.samatov.inventoryservicebar.services;
 
-import com.samatov.inventoryservicebar.entities.Whisky;
+import com.samatov.inventoryservicebar.common.exceptions.notfoundexceptions.WhiskyNotFoundException;
+import com.samatov.inventoryservicebar.dto.WhiskyDTO;
+import com.samatov.inventoryservicebar.entities.WhiskyEntity;
+import com.samatov.inventoryservicebar.mappers.WhiskyMapper;
 import com.samatov.inventoryservicebar.repositories.WhiskyRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -20,46 +23,55 @@ public class WhiskyService {
 
     WhiskyRepository whiskyRepository;
 
-    public List<Whisky> getAllWhiskys() {
-        log.info("Всю позицию виски получили из база данных");
-        return whiskyRepository.findAll();
+    WhiskyMapper whiskyMapper;
+
+    public List<WhiskyDTO> getAllWhiskys() {
+        List<WhiskyEntity> whiskys = whiskyRepository.findAll();
+        log.info("Получены все позиции виски из базы данных");
+        if (whiskys.isEmpty()) {
+            throw new WhiskyNotFoundException("Позиции виски не найдены в базе данных");
+        }
+        return whiskys.stream().map(whiskyMapper::toDto).collect(Collectors.toList());
     }
 
-    public void saveWhisky(Whisky whisky) {
-        log.info("Виски добавлен в базу данных");
+    public void saveWhisky(WhiskyDTO whiskyDTO) {
+        WhiskyEntity whisky = whiskyMapper.toEntity(whiskyDTO);
+        log.info("Добавление виски в базу данных");
         whiskyRepository.save(whisky);
     }
 
     public void deleteWhiskyById(String id) {
-        log.info("Виски удалено из база данных");
+        log.info("Удаление виски из базы данных");
+        if (!whiskyRepository.existsById(id)) {
+            throw new WhiskyNotFoundException("Виски с данным идендификатором не найдено");
+        }
         whiskyRepository.deleteById(id);
     }
 
     public void deleteAllWhiskys() {
-        log.info("Вся позиция виски удалена из база данных");
+        log.info("Удаление всех позиций виски из базы данных");
         whiskyRepository.deleteAll();
     }
 
-    public void updateWhisky(String id, Whisky whisky) {
-        Optional<Whisky> existingWhisky = whiskyRepository.findById(id);
+    public void updateWhisky(String id, WhiskyDTO whiskyDTO) {
+        Optional<WhiskyEntity> existingWhisky = whiskyRepository.findById(id);
         if (existingWhisky.isPresent()) {
-            Whisky updatedWhisky = existingWhisky.get();
-            updatedWhisky.setName(whisky.getName());
-            updatedWhisky.setCountryOfOrigin(whisky.getCountryOfOrigin());
-            updatedWhisky.setColor(whisky.getColor());
-            updatedWhisky.setPrice(whisky.getPrice());
-            updatedWhisky.setVolume(whisky.getVolume());
-            updatedWhisky.setAcoholContent(whisky.getAcoholContent());
-            log.info("Виски изменилось в базе данных");
+            WhiskyEntity updatedWhisky = whiskyMapper.toEntity(whiskyDTO);
+            updatedWhisky.setName(updatedWhisky.getName());
+            updatedWhisky.setColor(updatedWhisky.getColor());
+            updatedWhisky.setPrice(updatedWhisky.getPrice());
+            updatedWhisky.setVolume(updatedWhisky.getVolume());
+            updatedWhisky.setAlcoholContent(updatedWhisky.getAlcoholContent());
+            log.info("Обновление виски в базе данных");
             whiskyRepository.save(updatedWhisky);
+        } else {
+            throw new WhiskyNotFoundException("Виски с данным идендификатором не найдено");
         }
     }
 
-    public Optional<Whisky> findWhiskyById(String id) {
-        try {
-            return whiskyRepository.findById(id);
-        } catch (Exception e) {
-            throw new RuntimeException("Ошибка. Не удалось найти виски по ID " + e);
-        }
+    public WhiskyDTO findWhiskyById(String id) {
+        return whiskyRepository.findById(id)
+                .map(whiskyMapper::toDto)
+                .orElseThrow(() -> new WhiskyNotFoundException("Виски с данным идендификатором не найдено"));
     }
 }

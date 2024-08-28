@@ -1,7 +1,8 @@
 package com.samatov.inventoryservicebar.controllers;
 
-import com.samatov.inventoryservicebar.entities.Beer;
+import com.samatov.inventoryservicebar.dto.BeerDTO;
 import com.samatov.inventoryservicebar.services.BeerService;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -16,9 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
 import java.util.List;
-
 
 @RestController
 @RequestMapping("/api/v1/beer")
@@ -29,28 +28,26 @@ public class BeerController {
     BeerService beerService;
 
     @GetMapping("/all")
-    public ResponseEntity<List<Beer>> getAllBeers(){
-       List<Beer> beers =  beerService.getAllBeers();
-        return new ResponseEntity<>(beers,HttpStatus.OK);
+    public ResponseEntity<List<BeerDTO>> getAllBeers(){
+       List<BeerDTO> beersDto = beerService.getAllBeers();
+        return new ResponseEntity<>(beersDto, HttpStatus.OK);
     }
 
-
     @GetMapping("/{id}")
-    public ResponseEntity<Beer> getBeerById(@PathVariable String id){
-        return beerService.findBeerById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<BeerDTO> getBeerById(@PathVariable String id) {
+        BeerDTO beerDto = beerService.findBeerById(id);
+        return ResponseEntity.ok(beerDto);
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Void> saveBeer(@RequestBody Beer beer){
-        beerService.saveBeer(beer);
+    public ResponseEntity<Void> saveBeer(@RequestBody  @Valid BeerDTO beerDto){
+        beerService.saveBeer(beerDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Beer> updateBeerById(@PathVariable String id, Beer beer){
-        beerService.updateBeer(id,beer);
+    public ResponseEntity<BeerDTO> updateBeerById(@PathVariable String id, @Valid BeerDTO beerDto){
+        beerService.updateBeer(id,beerDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -61,7 +58,7 @@ public class BeerController {
     }
 
     @DeleteMapping("/delete/all")
-    public ResponseEntity<Beer> deleteAllBeers(){
+    public ResponseEntity<BeerDTO> deleteAllBeers(){
         beerService.deleteAllBeers();
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

@@ -1,8 +1,8 @@
 package com.samatov.inventoryservicebar.controllers;
 
-
-import com.samatov.inventoryservicebar.entities.Wine;
+import com.samatov.inventoryservicebar.dto.WineDTO;
 import com.samatov.inventoryservicebar.services.WineService;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
 import java.util.List;
 
 @RestController
@@ -29,27 +28,26 @@ public class WineController {
      WineService wineService;
 
     @GetMapping("/all")
-    public ResponseEntity<List<Wine>> getAllWines(){
-        List<Wine> wines =  wineService.getAllWines();
-        return new ResponseEntity<>(wines, HttpStatus.OK);
+    public ResponseEntity<List<WineDTO>> getAllWines(){
+        List<WineDTO> winesDto =  wineService.getAllWines();
+        return new ResponseEntity<>(winesDto, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Wine> getWineById(@PathVariable String id){
-        return wineService.findWineById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<WineDTO> getWineById(@PathVariable String id){
+       WineDTO wineDto = wineService.findWineById(id);
+       return ResponseEntity.ok(wineDto);
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Void> saveWine(@RequestBody Wine wine){
-        wineService.saveWine(wine);
+    public ResponseEntity<Void> saveWine(@RequestBody @Valid WineDTO wineDto){
+        wineService.saveWine(wineDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Wine> updateWineById(@PathVariable String id, Wine wine){
-        wineService.updateWine(id,wine);
+    public ResponseEntity<WineDTO> updateWineById(@PathVariable String id, @Valid WineDTO wineDto){
+        wineService.updateWine(id, wineDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -60,7 +58,7 @@ public class WineController {
     }
 
     @DeleteMapping("/delete/all")
-    public ResponseEntity<Wine> deleteAllWines(){
+    public ResponseEntity<WineDTO> deleteAllWines(){
         wineService.deleteAllWines();
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

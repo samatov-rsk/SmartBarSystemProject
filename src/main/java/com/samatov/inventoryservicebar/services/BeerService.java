@@ -12,8 +12,10 @@
 
 package com.samatov.inventoryservicebar.services;
 
-
-import com.samatov.inventoryservicebar.entities.Beer;
+import com.samatov.inventoryservicebar.common.exceptions.notfoundexceptions.BeerNotFoundException;
+import com.samatov.inventoryservicebar.dto.BeerDTO;
+import com.samatov.inventoryservicebar.entities.BeerEntity;
+import com.samatov.inventoryservicebar.mappers.BeerMapper;
 import com.samatov.inventoryservicebar.repositories.BeerRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -23,8 +25,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-
-
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -34,49 +35,62 @@ public class BeerService {
 
     BeerRepository beerRepository;
 
-    // Метод для получение всего пива
-    public List<Beer> getAllBeers() {
-        log.info("Всю позицию пива получили из база данных");
-        return beerRepository.findAll();
+    BeerMapper beerMapper;
+
+    // Метод для получения всего пива
+    public List<BeerDTO> getAllBeers() {
+        List<BeerEntity> beers = beerRepository.findAll();
+        log.info("Получены все позиции пива из базы данных");
+        if (beers.isEmpty()) {
+            throw new BeerNotFoundException("Позиции пива не найдены в базе данных");
+        }
+        return beers.stream().map(beerMapper::toDto).collect(Collectors.toList());
     }
 
-    // Метод для сохрания пива
-    public void saveBeer(Beer beer) {
-        log.info("Пива добавлено в базу данных");
+    // Метод для сохранения пива
+    public void saveBeer(BeerDTO beerDto) {
+        BeerEntity beer = beerMapper.toEntity(beerDto);
+        log.info("Добавление пива в базу данных");
         beerRepository.save(beer);
     }
 
     // Метод для удаления пива по айдишнику
     public void deleteBeerById(String id) {
-        log.info("Пива удален из база данных");
+        log.info("Удаление пива из базы данных");
+        if (!beerRepository.existsById(id)) {
+            throw new BeerNotFoundException("Пиво с данным идендификатором не найдено");
+        }
         beerRepository.deleteById(id);
     }
 
-    // Метод для удаления всего пива сущность
+    // Метод для удаления всего пива
     public void deleteAllBeers() {
-        log.info("Вся позиция пива удалена из база данных");
+        log.info("Удаление всех позиций пива из базы данных");
         beerRepository.deleteAll();
     }
 
     // Метод для изменения пива по айдишнику
-    public void updateBeer(String id, Beer beer) {
-        Optional<Beer> existingBeer = beerRepository.findById(id);
+    public void updateBeer(String id, BeerDTO beerDto) {
+        Optional<BeerEntity> existingBeer = beerRepository.findById(id);
         if (existingBeer.isPresent()) {
-            Beer updatedBeer = existingBeer.get();
-            updatedBeer.setName(beer.getName());
-            updatedBeer.setCountryOfOrigin(beer.getCountryOfOrigin());
-            updatedBeer.setColor(beer.getColor());
-            updatedBeer.setPrice(beer.getPrice());
-            updatedBeer.setVolume(beer.getVolume());
-            updatedBeer.setAcoholContent(beer.getAcoholContent());
-            updatedBeer.setIsFiltered(beer.getIsFiltered());
-            log.info("Пиво изменилось в базе данных");
+            BeerEntity updatedBeer = beerMapper.toEntity(beerDto);
+            updatedBeer.setName(updatedBeer.getName());
+            updatedBeer.setColor(updatedBeer.getColor());
+            updatedBeer.setPrice(updatedBeer.getPrice());
+            updatedBeer.setVolume(updatedBeer.getVolume());
+            updatedBeer.setAlcoholContent(updatedBeer.getAlcoholContent());
+            updatedBeer.setIsFiltered(updatedBeer.getIsFiltered());
+            log.info("Обновление пива в базе данных");
             beerRepository.save(updatedBeer);
+        } else {
+            throw new BeerNotFoundException("Пиво с данным идендификатором не найдено");
         }
     }
 
-    // Метод для нахождение пиво по айдишнику
-    public Optional<Beer> findBeerById(String id) {
-            return beerRepository.findById(id);
+    // Метод для нахождения пива по айдишнику
+    public BeerDTO findBeerById(String id) {
+        return beerRepository.findById(id)
+                .map(beerMapper::toDto)
+                .orElseThrow(() -> new BeerNotFoundException("Пиво с данным идендификатором не найдено"));
     }
 }
